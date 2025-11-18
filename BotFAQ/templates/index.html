@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleekBot</title>
+
+    <!-- Caminho CORRETO no Flask -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Ícone flutuante -->
+    <div class="chat-toggle" id="chatToggle">💬</div>
+
+    <!-- Container do chat -->
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <h3>FleekBot</h3>
+            <button id="closeChat">✖</button>
+        </div>
+
+        <!-- Guia de palavras-chave -->
+        <div class="guia">
+            <p><strong>💡 Dica:</strong> Busque por palavras como 
+                <em>Conta</em>, <em>Suporte</em>, <em>Plano</em>, <em>Atualização</em>.
+            </p>
+        </div>
+
+        <div id="chatbox"></div>
+
+        <div class="input-area">
+            <input type="text" id="mensagem" placeholder="Digite sua mensagem...">
+            <button onclick="enviar()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== Mostrar / Ocultar o chat =====
+        const toggleBtn = document.getElementById('chatToggle');
+        const chat = document.getElementById('chatContainer');
+        const closeBtn = document.getElementById('closeChat');
+
+        toggleBtn.addEventListener('click', () => {
+            chat.classList.toggle('open');
+            toggleBtn.style.display = chat.classList.contains('open') ? 'none' : 'flex';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            chat.classList.remove('open');
+            toggleBtn.style.display = 'flex';
+        });
+
+        // ===== Enviar mensagem =====
+        async function enviar() {
+            const mensagem = document.getElementById("mensagem").value;
+            if (!mensagem.trim()) return;
+
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML += `<div class="msg user-msg"><p>${mensagem}</p></div>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+            document.getElementById("mensagem").value = "";
+
+            const resposta = await fetch("/perguntar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ mensagem })
+            }).then(r => r.json());
+
+            chatbox.innerHTML += `<div class="msg bot-msg"><p>${resposta.resposta}</p></div>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
