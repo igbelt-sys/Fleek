@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Login - Fleek</title>
+</head>
+<body>
+
+<div class="login-container">
+    <h1 class="logo">FLEEK</h1>
+
+    <button class="btn social google">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg">
+        Continue com Google
+    </button>
+
+    <button class="btn social apple">
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg">
+        Continue com Apple
+    </button>
+
+    <form action="/login" method="POST">
+        <label>Email</label>
+        <input type="email" name="email" required placeholder="digite seu endereço de email">
+
+        <label>Senha</label>
+        <input type="password" name="password" required placeholder="sua senha">
+
+        <button class="btn primary" type="submit">Entrar</button>
+    </form>
+
+    <p class="register-text">
+        Não tem uma conta? <a href="/register">crie sua conta</a>
+    </p>
+</div>
+
+</body>
+</html>

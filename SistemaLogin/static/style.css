@@ -1,0 +1,79 @@
+body {
+    margin: 0;
+    background: url('/static/bg.jpg') no-repeat center/cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    width: 420px;
+    backdrop-filter: blur(25px);
+    background: rgba(0,0,0,0.55);
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    color: white;
+}
+
+.logo {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    margin: 10px 0;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.social {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    background: white;
+    color: black;
+}
+
+.social img {
+    width: 24px;
+}
+
+.primary {
+    background: #7e3cff;
+    color: white;
+}
+
+form {
+    margin-top: 20px;
+}
+
+label {
+    font-size: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0 20px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+.register-text {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.register-text a {
+    color: #b38bff;
+}

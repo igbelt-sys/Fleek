@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Criar Conta</title>
+</head>
+<body>
+
+<div class="login-container">
+    <h1 class="logo">Criar Conta</h1>
+
+    <form action="/register" method="POST">
+
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <label>Senha</label>
+        <input type="password" name="password" required>
+
+        <button class="btn primary" type="submit">Cadastrar</button>
+    </form>
+
+    <p class="register-text">
+        Já tem login? <a href="/">Entrar</a>
+    </p>
+</div>
+
+</body>
+</html>
