@@ -6,16 +6,38 @@
     <title>Login - Fleek</title>
 </head>
 <body>
-
+    
 <div class="login-container">
-    <h1 class="logo">FLEEK</h1>
+<h1 class="logo">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo-img">
+    FLEEK
+</h1>
+</h1>
 
-    <button class="btn social google">
+    <!-- 🔥 MENSAGENS DO FLASK -->
+    {% with mensagens = get_flashed_messages(with_categories=True) %}
+        {% if mensagens %}
+            {% for categoria, msg in mensagens %}
+                {% if categoria == "success" %}
+                    <div class="success">{{ msg }}</div>
+                {% else %}
+                    <div class="error">{{ msg }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- 🔥 ERRO INDIVIDUAL -->
+    {% if erro %}
+        <div class="error">{{ erro }}</div>
+    {% endif %}
+
+    <button class="btn social">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg">
         Continue com Google
     </button>
 
-    <button class="btn social apple">
+    <button class="btn social">
         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg">
         Continue com Apple
     </button>
