@@ -4,26 +4,32 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FLEEK - Descubra Músicas</title>
+    <title>FLEEK - A Música Move Você</title>
 
     <style>
-        /* [SEU CSS DE TEMA E ESTILOS GERAIS - IDÊNTICO AO ARQUIVO ANTERIOR] */
+        /* =========================================
+           1. VARIÁVEIS E RESET
+           ========================================= */
         :root {
-            --bg-color: linear-gradient(135deg, #1f1f1f, #121212);
-            --text-color: #f0f0f0;
-            --text-muted: #a0a0a0;
-            --card-bg: rgba(30, 30, 30, 0.5);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --blur-amount: 15px;
-            --accent-color: #9f55ff;
+            --bg-color: linear-gradient(135deg, #121212 0%, #0a0a0a 100%);
+            --text-color: #ffffff;
+            --text-muted: #b3b3b3;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-hover: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --blur-amount: 20px;
+            /* COR INICIAL PADRÃO: Branco/Cinza (Prata) */
+            --accent-color: #e0e0e0;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         :root.light-mode {
-            --bg-color: linear-gradient(135deg, #f0f2f5, #e0e5ec);
+            --bg-color: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             --text-color: #1a1a1a;
             --text-muted: #555;
             --card-bg: rgba(255, 255, 255, 0.6);
-            --card-border: rgba(0, 0, 0, 0.08);
+            --card-hover: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(0, 0, 0, 0.05);
         }
 
         * {
@@ -33,30 +39,44 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: var(--font-main);
             background: var(--bg-color);
             color: var(--text-color);
-            transition: background 0.3s ease, color 0.3s ease;
+            transition: background 0.5s ease;
             min-height: 100vh;
-            padding-top: 100px;
+            padding-top: 90px;
+            overflow-x: hidden;
         }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-weight: 700;
+        /* Scrollbar Customizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* =========================================
+           2. HEADER (TOPBAR)
+           ========================================= */
         .topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 5vw;
+            padding: 0 4vw;
             height: 80px;
-            background: var(--card-bg);
+            background: rgba(10, 10, 10, 0.7);
             backdrop-filter: blur(var(--blur-amount));
             -webkit-backdrop-filter: blur(var(--blur-amount));
             border-bottom: 1px solid var(--card-border);
@@ -65,33 +85,120 @@
             left: 0;
             width: 100%;
             z-index: 1000;
+            transition: background 0.3s ease;
         }
 
+        /* LOGO COM EFEITO GLOW/BLUR DINÂMICO */
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+            text-decoration: none;
+            position: relative;
+            /* Necessário para posicionar o blur */
+        }
+
+        /* A "Voltinha" Blur atrás da logo */
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            /* AJUSTE: Movi mais para a esquerda (era 20px, agora 15px) para centralizar melhor */
+            left: 15px;
+            transform: translate(-50%, -50%);
+            width: 45px;
+            /* Um pouco maior para espalhar melhor */
+            height: 45px;
+            background: var(--accent-color);
+            /* Pega a cor do tema! */
+            filter: blur(25px);
+            /* O desfoque suave */
+            opacity: 0.6;
+            /* Transparência para não ofuscar */
+            border-radius: 50%;
+            z-index: -1;
+            /* Fica atrás da imagem */
+            transition: background 0.3s ease;
         }
 
         .logo img {
-            height: 40px;
-            width: 40px;
-            border-radius: 8px;
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+            z-index: 1;
+            /* Garante que a logo fique na frente do blur */
         }
 
         .logo h1 {
-            font-size: 2.25rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--text-color);
+        }
+
+        .logo span {
             color: var(--accent-color);
-            transition: color 0.3s ease;
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        /* Ponto brilhante também */
+
+        /* Barra de Pesquisa Animada */
+        .search-container {
+            flex-grow: 1;
+            max-width: 500px;
+            margin: 0 40px;
+            position: relative;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .search-container.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            padding-left: 45px;
+            border-radius: 50px;
+            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .search-icon-inside {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 18px;
         }
 
         .menu {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            align-items: center;
         }
 
         .icon-btn {
-            background: none;
+            background: transparent;
             border: none;
             cursor: pointer;
             padding: 10px;
@@ -99,220 +206,348 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s ease;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            text-decoration: none;
         }
 
-        .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .light-mode .icon-btn:hover {
-            background: rgba(0, 0, 0, 0.1);
+        .icon-btn:hover,
+        .icon-btn.active {
+            background: var(--card-hover);
+            color: var(--text-color);
+            transform: scale(1.05);
         }
 
         .icon-svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--text-color);
-            transition: stroke 0.3s ease;
+            width: 22px;
+            height: 22px;
+            stroke-width: 2px;
         }
 
+        /* =========================================
+           3. CONTEÚDO E CARDS
+           ========================================= */
         .content {
-            padding: 20px 5vw;
+            padding: 20px 4vw;
             display: flex;
             flex-direction: column;
-            gap: 40px;
+            gap: 60px;
+            padding-bottom: 100px;
         }
 
-        .content section h2 {
-            font-size: 1.75rem;
-            margin-bottom: 20px;
-            color: var(--accent-color);
-            transition: color 0.3s ease;
+        section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
+        section h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--accent-color);
+            border-radius: 2px;
+            display: block;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        /* Scroll Horizontal */
         .scroll {
             display: flex;
-            gap: 20px;
+            gap: 24px;
             overflow-x: auto;
-            padding-bottom: 20px;
-            scrollbar-width: none;
+            padding: 10px 5px 30px 5px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
         .scroll::-webkit-scrollbar {
-            display: none;
+            height: 6px;
         }
 
+        /* --- CARD DE MÚSICA/ÁLBUM --- */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            backdrop-filter: blur(var(--blur-amount));
-            -webkit-backdrop-filter: blur(var(--blur-amount));
-            border-radius: 16px;
-            width: 220px;
+            border-radius: 12px;
+            width: 200px;
             flex-shrink: 0;
-            padding: 15px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 16px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-8px);
+            background: var(--card-hover);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .card:hover::before {
+            /* Glow suave no card hover */
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, var(--accent-color), transparent 70%);
+            opacity: 0.1;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
         }
 
         .card .img {
             width: 100%;
-            height: 190px;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            height: 100%;
             background-size: cover;
             background-position: center;
+            transition: transform 0.5s ease;
         }
 
+        .card:hover .img {
+            transform: scale(1.08);
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-btn-small {
+            width: 45px;
+            height: 45px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transform: translateY(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .play-btn-small {
+            transform: translateY(0);
+        }
+
+        .play-btn-small svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+            margin-left: 3px;
+        }
+
+        /* Ícone play sempre branco ou preto dependendo do contraste */
+
+        /* Ajuste para o ícone play ser visível se a cor de destaque for muito clara */
+        .play-btn-small svg {
+            fill: #121212;
+        }
+
+        /* Preto fica melhor em cores claras como o cinza/branco */
+
         .card h4 {
-            font-size: 1.1rem;
+            font-size: 1rem;
+            font-weight: 600;
             color: var(--text-color);
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            z-index: 1;
+            position: relative;
         }
 
         .card p {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            z-index: 1;
+            position: relative;
         }
 
-        /* Placeholder de Carregamento (Spinner) */
-        .loader {
-            width: 48px;
-            height: 48px;
-            border: 5px solid var(--text-color);
-            border-bottom-color: var(--accent-color);
-            border-radius: 50%;
-            display: block;
-            margin: 20px auto;
-            animation: rotation 1s linear infinite;
-        }
-
-        @keyframes rotation {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-
+        /* --- CARD DE ARTISTA --- */
         .artist-circle {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-            width: 140px;
+            gap: 12px;
+            width: 160px;
             flex-shrink: 0;
             text-align: center;
             cursor: pointer;
-            transition: transform 0.3s ease;
         }
 
-        .artist-circle:hover {
-            transform: scale(1.05);
-        }
-
-        .artist-circle .img {
-            width: 120px;
-            height: 120px;
+        .artist-img-container {
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border: 3px solid transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .artist-circle:hover .artist-img-container {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-color);
+            /* Glow na borda */
+        }
+
+        .artist-img {
+            width: 100%;
+            height: 100%;
             background-size: cover;
             background-position: center;
-            border: 2px solid var(--card-border);
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .artist-circle:hover .artist-img {
+            transform: scale(1.1);
         }
 
         .artist-circle p {
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--text-color);
+            transition: color 0.3s ease;
         }
 
-        /* [CSS DO POPOVER DE TEMA - IDÊNTICO AO ARQUIVO ANTERIOR] */
+        .artist-circle:hover p {
+            color: var(--accent-color);
+            text-shadow: 0 0 8px var(--accent-color);
+        }
+
+
+        /* =========================================
+           4. EXTRAS
+           ========================================= */
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 40px auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* POPOVER DE TEMAS */
         .theme-popover {
             position: fixed;
             top: 90px;
-            right: 5vw;
-            background: var(--card-bg);
+            right: 4vw;
+            background: rgba(20, 20, 20, 0.95);
             border: 1px solid var(--card-border);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(30px);
             border-radius: 16px;
-            padding: 20px;
-            width: 300px;
+            padding: 24px;
+            width: 320px;
             z-index: 2000;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            transform: translateY(20px) scale(0.95);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            transform: translateY(10px) scale(0.98);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .theme-popover.active {
-            transform: translateY(0) scale(1);
             opacity: 1;
             visibility: visible;
+            transform: translateY(0) scale(1);
         }
 
         .popover-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             margin-bottom: 20px;
+            align-items: center;
         }
 
         .popover-header h3 {
-            font-size: 1.2rem;
-            color: var(--text-color);
+            font-size: 1.1rem;
+            color: white;
         }
 
-        #close-popover {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--text-muted);
-            cursor: pointer;
+        .close-btn {
             background: none;
             border: none;
-        }
-
-        #close-popover:hover {
-            color: var(--text-color);
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         .theme-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.1);
-            padding: 10px;
-            border-radius: 12px;
             margin-bottom: 20px;
         }
 
-        .light-mode .theme-toggle {
-            background: rgba(0, 0, 0, 0.05);
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
         }
 
-        .theme-toggle span {
-            font-weight: 500;
-            color: var(--text-color);
+        /* Ajustado para caber mais uma cor */
+        .color-swatch {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.2);
         }
 
         .switch {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 28px;
+            width: 46px;
+            height: 26px;
         }
 
         .switch input {
@@ -326,7 +561,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #555;
+            background-color: #444;
             transition: .4s;
             border-radius: 34px;
         }
@@ -336,8 +571,8 @@
             content: "";
             height: 20px;
             width: 20px;
-            left: 4px;
-            bottom: 4px;
+            left: 3px;
+            bottom: 3px;
             background-color: white;
             transition: .4s;
             border-radius: 50%;
@@ -348,329 +583,346 @@
         }
 
         input:checked+.slider:before {
-            transform: translateX(22px);
-        }
-
-        .varset-title {
-            font-weight: 500;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .color-palette {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-        }
-
-        .color-swatch {
-            width: 100%;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid var(--card-border);
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .color-swatch:hover {
-            transform: scale(1.1);
-            border-color: var(--text-color);
+            transform: translateX(20px);
         }
     </style>
 </head>
 
 <body>
 
-    <!-- 1. HEADER (Topbar) -->
+    <!-- HEADER -->
     <header class="topbar">
-        <div class="logo">
-            <img src="https://placehold.co/100x100/121212/9f55ff?text=F" alt="Fleek Logo">
-            <h1>FLEEK</h1>
+        <a href="index.html" class="logo">
+            <img src="logopng.png" alt="Fleek Logo">
+            <h1>FLEEK <span>.</span></h1>
+        </a>
+
+        <div class="search-container" id="search-bar-container">
+            <svg class="search-icon-inside" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="search-input" class="search-input" placeholder="O que você quer ouvir hoje?">
         </div>
 
         <nav class="menu">
-            <!-- Botões do Menu -->
-            <button class="icon-btn" id="btn-playlist" aria-label="Playlist"> <svg class="icon-svg" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <!-- 1. Playlist (Ícone Lista) -->
+            <a href="#" class="icon-btn" aria-label="Playlist">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="4" width="14" height="4" rx="1"></rect>
                     <rect x="3" y="10" width="10" height="4" rx="1"></rect>
                     <rect x="3" y="16" width="6" height="4" rx="1"></rect>
                     <circle cx="20" cy="14" r="2"></circle>
                     <path d="M20 12v4"></path>
-                </svg> </button>
-            <button class="icon-btn" id="btn-search" aria-label="Pesquisar"> <svg class="icon-svg" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="6"></circle>
-                    <path d="M21 21l-4.35-4.35"></path>
-                </svg> </button>
-            <button class="icon-btn" id="btn-profile" aria-label="Perfil"> <svg class="icon-svg" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                </svg>
+            </a>
+
+            <!-- 2. Busca (Lupa - Toggle) -->
+            <button class="icon-btn" id="btn-search" aria-label="Buscar">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+
+            <!-- 3. Tema (Lua) -->
+            <button class="icon-btn" id="btn-theme" aria-label="Tema">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+
+            <!-- 4. Conta (Bonequinho Padrão) -->
+            <a href="user_account.html" class="icon-btn" aria-label="Perfil">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
                     <path d="M4 21v-2a4 4 0 0 1 3-3.87"></path>
                     <circle cx="12" cy="7" r="4"></circle>
-                </svg> </button>
-            <button class="icon-btn" id="btn-theme" aria-label="Modo Escuro/Claro"> <svg class="icon-svg"
-                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg> </button>
+                </svg>
+            </a>
         </nav>
     </header>
 
-    <!-- 2. POPOVER DE TEMAS -->
+    <!-- POPOVER DE TEMA -->
     <div class="theme-popover" id="theme-popover">
         <div class="popover-header">
-            <h3>Personalizar Tema</h3>
-            <button id="close-popover">&times;</button>
+            <h3>Aparência</h3>
+            <button class="close-btn" id="close-popover">&times;</button>
         </div>
         <div class="theme-toggle">
-            <span>Modo Escuro / Claro</span>
-            <label class="switch"> <input type="checkbox" id="light-dark-toggle"> <span class="slider"></span> </label>
+            <span style="color: #ccc; font-size: 0.9rem;">Modo Claro</span>
+            <label class="switch"><input type="checkbox" id="light-dark-toggle"><span class="slider"></span></label>
         </div>
-        <div class="varset-colors">
-            <h4 class="varset-title">Cor de Destaque (Varset)</h4>
+        <div style="margin-top: 15px;">
+            <h4
+                style="color: #888; font-size: 0.8rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">
+                Cor de Destaque</h4>
             <div class="color-palette">
-                <button class="color-swatch" data-color="#9f55ff" style="background-color: #9f55ff;"></button>
-                <button class="color-swatch" data-color="#007BFF" style="background-color: #007BFF;"></button>
-                <button class="color-swatch" data-color="#28a745" style="background-color: #28a745;"></button>
-                <button class="color-swatch" data-color="#fd7e14" style="background-color: #fd7e14;"></button>
-                <button class="color-swatch" data-color="#e83e8c" style="background-color: #e83e8c;"></button>
+                <!-- NOVA COR PADRÃO (Prata/Branco) -->
+                <div class="color-swatch" data-color="#e0e0e0" style="background: #e0e0e0; border: 1px solid #555;"
+                    title="Padrão (Prata)"></div>
+
+                <div class="color-swatch" data-color="#9f55ff" style="background: #9f55ff;"></div>
+                <div class="color-swatch" data-color="#2563eb" style="background: #2563eb;"></div>
+                <div class="color-swatch" data-color="#10b981" style="background: #10b981;"></div>
+                <div class="color-swatch" data-color="#f59e0b" style="background: #f59e0b;"></div>
+                <div class="color-swatch" data-color="#ef4444" style="background: #ef4444;"></div>
             </div>
         </div>
     </div>
 
-    <!-- 3. CONTEÚDO PRINCIPAL -->
+    <!-- MAIN CONTENT -->
     <main class="content">
 
-        <!-- Seção de Recomendações (AGORA DINÂMICA) -->
-        <section class="recomendacoes">
-            <h2>Novos Lançamentos</h2>
+        <!-- SEÇÃO DE BUSCA (Resultados) -->
+        <section id="search-results-section" style="display: none;">
+            <h2 id="search-results-title">Resultados da Busca</h2>
+            <div class="scroll" id="search-results-scroll"></div>
+        </section>
 
-            <!-- O JavaScript vai preencher esta 'div' -->
+        <!-- 1. LANÇAMENTOS DA SEMANA -->
+        <section id="new-releases-section">
+            <h2>Lançamentos da Semana</h2>
             <div class="scroll" id="recommendations-scroll">
-                <!-- Placeholder de Carregamento -->
-                <span class="loader" id="recommendations-loader"></span>
+                <div class="loader"></div>
             </div>
         </section>
 
-        <!-- Seção de Artistas em Alta (ESTÁTICA, por enquanto) -->
-        <section class="artistas">
-            <h2>Artistas em alta</h2>
-            <div class="scroll">
-                <!-- (Seus cards estáticos de artistas) -->
-                <div class="artist-circle">
-                    <div class="img"
-                        style="background-image: url('https://placehold.co/300x300/1a1a1a/eee?text=Artista+1')"></div>
-                    <p>The Weeknd</p>
-                </div>
-                <div class="artist-circle">
-                    <div class="img"
-                        style="background-image: url('https://placehold.co/300x300/3a3a3a/eee?text=Artista+2')"></div>
-                    <p>Billie Eilish</p>
-                </div>
-                <div class="artist-circle">
-                    <div class="img"
-                        style="background-image: url('https://placehold.co/300x300/5a5a5a/eee?text=Artista+3')"></div>
-                    <p>Tame Impala</p>
-                </div>
-                <div class="artist-circle">
-                    <div class="img"
-                        style="background-image: url('https://placehold.co/300x300/7a7a7a/eee?text=Artista+4')"></div>
-                    <p>Matuê</p>
-                </div>
-                <div class="artist-circle">
-                    <div class="img"
-                        style="background-image: url('https://placehold.co/300x300/9a9a9a/eee?text=Artista+5')"></div>
-                    <p>Dua Lipa</p>
-                </div>
+        <!-- 2. TOP 50 BRASIL -->
+        <section id="top-tracks-section">
+            <h2>Em Alta no Brasil 🇧🇷</h2>
+            <div class="scroll" id="top-tracks-scroll">
+                <div class="loader"></div>
             </div>
         </section>
+
+        <!-- 3. ARTISTAS EM DESTAQUE -->
+        <section id="top-artists-section">
+            <h2>Artistas em Destaque</h2>
+            <div class="scroll" id="artists-scroll">
+                <div class="loader"></div>
+            </div>
+        </section>
+
     </main>
 
-    <!-- 
-      ============================================================
-      JAVASCRIPT (Lógica de Tema + Lógica da API do Spotify)
-      ============================================================
-    -->
     <script>
-        // --- CÓDIGO DA API DO SPOTIFY ---
-
-        // !! IMPORTANTE !!
-        // Cole suas chaves da Fase 1 aqui
+        // ==========================================
+        // CONFIGURAÇÃO E API (SPOTIFY)
+        // ==========================================
         const clientId = 'acfec55c6b6448c5b8521549f9f1e8dc';
         const clientSecret = '0ebed43e9c404666ad620e84a6813cb6';
+        let spotifyToken = null;
 
-        /**
-         * Etapa 1: Pega o Token de Acesso do Spotify
-         */
         async function getSpotifyToken() {
-            // btoa() codifica suas chaves em Base64, como o Spotify exige
-            const authString = btoa(`${clientId}:${clientSecret}`);
-
+            if (spotifyToken) return spotifyToken;
             try {
-                const response = await fetch('https://accounts.spotify.com/api/token', {
+                const res = await fetch('https://accounts.spotify.com/api/token', {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Basic ${authString}`,
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
+                    headers: { 'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret), 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'grant_type=client_credentials'
                 });
-
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP! Status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                return data.access_token;
-
-            } catch (error) {
-                console.error('Erro ao obter o token do Spotify:', error);
-                return null;
-            }
+                if (!res.ok) throw new Error('Auth Failed');
+                const data = await res.json();
+                spotifyToken = data.access_token;
+                return spotifyToken;
+            } catch (e) { console.error("Token Error:", e); return null; }
         }
 
-        /**
-         * Etapa 2: Busca os Novos Lançamentos usando o Token
-         */
         async function getNewReleases(token) {
             try {
-                const response = await fetch('https://api.spotify.com/v1/browse/new-releases?limit=10', { // Pega 10 álbuns
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                const res = await fetch('https://api.spotify.com/v1/browse/new-releases?country=BR&limit=10', { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                return data.albums.items;
+            } catch (e) { return []; }
+        }
+
+        async function getTopTracks(token) {
+            try {
+                const playlistId = '37i9dQZEVXbMXbN3EUUhlg';
+                const res = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=12`, { headers: { 'Authorization': `Bearer ${token}` } });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.items && data.items.length > 0) {
+                        return data.items.map(item => item.track);
                     }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP! Status: ${response.status}`);
                 }
-
-                const data = await response.json();
-                return data.albums.items; // Retorna a lista de álbuns
-
-            } catch (error) {
-                console.error('Erro ao buscar lançamentos:', error);
-                return []; // Retorna uma lista vazia em caso de erro
+                throw new Error("Playlist Vazia ou Erro");
+            } catch (e) {
+                console.warn("Fallback para Busca de Tracks:", e);
+                try {
+                    const searchRes = await fetch(`https://api.spotify.com/v1/search?q=Top%20Brasil&type=track&market=BR&limit=12`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const searchData = await searchRes.json();
+                    return searchData.tracks.items;
+                } catch (err) { return []; }
             }
         }
 
-        /**
-         * Etapa 3: Renderiza (desenha) os álbuns na tela
-         */
-        function renderNewReleases(albums) {
-            const container = document.getElementById('recommendations-scroll');
-            const loader = document.getElementById('recommendations-loader');
+        async function getTopArtists(token) {
+            try {
+                const tracks = await getTopTracks(token);
+                const artistIds = new Set();
+                tracks.forEach(t => { if (t && t.artists) t.artists.slice(0, 1).forEach(a => artistIds.add(a.id)); });
 
-            // 1. Remove o "Loading..."
-            if (loader) {
-                container.removeChild(loader);
+                const ids = Array.from(artistIds).slice(0, 10).join(',');
+
+                if (ids) {
+                    const res = await fetch(`https://api.spotify.com/v1/artists?ids=${ids}`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    if (res.ok) {
+                        const data = await res.json();
+                        return data.artists;
+                    }
+                }
+                throw new Error("Ids Vazios");
+            } catch (e) {
+                try {
+                    const searchRes = await fetch(`https://api.spotify.com/v1/search?q=genre:pop&type=artist&market=BR&limit=10`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const searchData = await searchRes.json();
+                    return searchData.artists.items;
+                } catch (err) { return []; }
             }
+        }
 
-            // 2. Limpa qualquer conteúdo antigo (caso haja)
+        async function searchSpotify(query, token) {
+            try {
+                const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track,artist,album&limit=10`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                return [...(data.tracks?.items || []), ...(data.artists?.items || [])];
+            } catch (e) { return []; }
+        }
+
+        function createCard(image, title, subtitle, isRound = false) {
+            const div = document.createElement('div');
+            if (isRound) {
+                div.className = 'artist-circle';
+                div.innerHTML = `
+                    <div class="artist-img-container">
+                        <div class="artist-img" style="background-image: url('${image}');"></div>
+                    </div>
+                    <p>${title}</p>
+                `;
+            } else {
+                div.className = 'card';
+                div.innerHTML = `
+                    <div class="card-img-wrapper">
+                        <div class="img" style="background-image: url('${image}');"></div>
+                        <div class="play-overlay"><div class="play-btn-small"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+                    </div>
+                    <h4>${title}</h4>
+                    <p>${subtitle}</p>
+                `;
+            }
+            return div;
+        }
+
+        function renderList(data, containerId, type) {
+            const container = document.getElementById(containerId);
             container.innerHTML = '';
 
-            if (albums.length === 0) {
-                container.innerHTML = '<p>Não foi possível carregar os lançamentos.</p>';
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p style="color:#666; padding:20px;">Indisponível.</p>';
                 return;
             }
 
-            // 3. Cria um card para cada álbum
-            albums.forEach(album => {
-                const card = document.createElement('div');
-                card.className = 'card'; // Usa a mesma classe de estilo que você já tinha
-
-                const imageUrl = album.images[0].url; // Pega a primeira imagem (maior)
-                const title = album.name;
-                const artist = album.artists.map(a => a.name).join(', '); // Junta artistas se houver mais de um
-
-                card.innerHTML = `
-                    <div class="img" style="background-image: url('${imageUrl}')"></div>
-                    <h4>${title}</h4>
-                    <p>Por ${artist}</p>
-                `;
-
-                container.appendChild(card);
-            });
-        }
-
-        /**
-         * Função principal que é executada quando a página carrega
-         */
-        async function initializeSpotify() {
-            // Etapa 1: Obter o token
-            const token = await getSpotifyToken();
-
-            if (token) {
-                // Etapa 2: Com o token, buscar os álbuns
-                const albums = await getNewReleases(token);
-                // Etapa 3: Renderizar os álbuns na tela
-                renderNewReleases(albums);
-            } else {
-                // Tratar erro (ex: chaves erradas)
-                const container = document.getElementById('recommendations-scroll');
-                container.innerHTML = '<p class="text-muted">Erro ao conectar com o Spotify. Verifique suas chaves de API no código.</p>';
-            }
-        }
-
-        // --- FIM DO CÓDIGO SPOTIFY ---
-
-
-        // --- CÓDIGO DE TEMA (O mesmo de antes) ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Seleciona os elementos de Tema
-            const themeBtn = document.getElementById('btn-theme');
-            const themePopover = document.getElementById('theme-popover');
-            const closePopoverBtn = document.getElementById('close-popover');
-            const lightDarkToggle = document.getElementById('light-dark-toggle');
-            const colorSwatches = document.querySelectorAll('.color-swatch');
-            const root = document.documentElement;
-
-            // Lógica para ABRIR/FECHAR o Popover de Tema
-            themeBtn.addEventListener('click', () => themePopover.classList.toggle('active'));
-            closePopoverBtn.addEventListener('click', () => themePopover.classList.remove('active'));
-            document.addEventListener('click', (e) => {
-                if (!themeBtn.contains(e.target) && !themePopover.contains(e.target)) {
-                    themePopover.classList.remove('active');
+            data.forEach(item => {
+                let img = 'https://placehold.co/200?text=No+Img';
+                if (type === 'artist' || item.type === 'artist') {
+                    if (item.images && item.images.length > 0) img = item.images[0].url;
+                } else {
+                    if (item.album && item.album.images && item.album.images.length > 0) img = item.album.images[0].url;
+                    else if (item.images && item.images.length > 0) img = item.images[0].url;
                 }
+
+                let title = item.name;
+                let sub = '';
+                let isRound = (type === 'artist' || item.type === 'artist');
+
+                if (!isRound && item.artists) {
+                    sub = item.artists.map(a => a.name).join(', ');
+                }
+                container.appendChild(createCard(img, title, sub, isRound));
+            });
+        }
+
+        // ==========================================
+        // INICIALIZAÇÃO
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            const root = document.documentElement;
+            const themeBtn = document.getElementById('btn-theme');
+            const popover = document.getElementById('theme-popover');
+            const closePop = document.getElementById('close-popover');
+            const searchBtn = document.getElementById('btn-search');
+            const searchContainer = document.getElementById('search-bar-container');
+            const searchInput = document.getElementById('search-input');
+
+            themeBtn.addEventListener('click', () => popover.classList.toggle('active'));
+            closePop.addEventListener('click', () => popover.classList.remove('active'));
+
+            searchBtn.addEventListener('click', () => {
+                searchContainer.classList.toggle('active');
+                if (searchContainer.classList.contains('active')) searchInput.focus();
             });
 
-            // Lógica do Toggle LIGHT/DARK
-            lightDarkToggle.addEventListener('change', toggleTheme);
-            function toggleTheme() {
+            document.getElementById('light-dark-toggle').addEventListener('change', (e) => {
                 root.classList.toggle('light-mode');
                 localStorage.setItem('fleek-theme', root.classList.contains('light-mode') ? 'light' : 'dark');
-            }
-
-            // Lógica do VARSET COLOR
-            colorSwatches.forEach(swatch => {
-                swatch.addEventListener('click', () => setAccentColor(swatch.dataset.color));
             });
-            function setAccentColor(color) {
-                root.style.setProperty('--accent-color', color);
-                localStorage.setItem('fleek-accent', color);
-            }
+            document.querySelectorAll('.color-swatch').forEach(s => {
+                s.addEventListener('click', () => {
+                    root.style.setProperty('--accent-color', s.dataset.color);
+                    localStorage.setItem('fleek-accent-v2', s.dataset.color);
+                });
+            });
 
-            // Carregar Preferências Salvas
-            function loadPreferences() {
-                const savedTheme = localStorage.getItem('fleek-theme');
-                if (savedTheme === 'light') {
-                    root.classList.add('light-mode');
-                    lightDarkToggle.checked = true;
-                }
-                const savedAccent = localStorage.getItem('fleek-accent');
-                if (savedAccent) {
-                    setAccentColor(savedAccent);
-                }
+            // Recupera tema salvo ou define padrão
+            if (localStorage.getItem('fleek-theme') === 'light') {
+                root.classList.add('light-mode');
+                document.getElementById('light-dark-toggle').checked = true;
             }
+            // Use v2 para resetar para cinza na primeira vez
+            const savedAccent = localStorage.getItem('fleek-accent-v2');
+            if (savedAccent) root.style.setProperty('--accent-color', savedAccent);
 
-            // --- INICIALIZAÇÃO ---
-            loadPreferences();    // Carrega os temas salvos
-            initializeSpotify();  // Carrega as músicas do Spotify
+            // --- LOAD DATA ---
+            const token = await getSpotifyToken();
+            if (token) {
+                const [releases, tracks, artists] = await Promise.all([
+                    getNewReleases(token),
+                    getTopTracks(token),
+                    getTopArtists(token)
+                ]);
+
+                renderList(releases, 'recommendations-scroll', 'album');
+                renderList(tracks, 'top-tracks-scroll', 'track');
+                renderList(artists, 'artists-scroll', 'artist');
+
+                searchInput.addEventListener('keypress', async (e) => {
+                    if (e.key === 'Enter' && searchInput.value.trim()) {
+                        document.getElementById('new-releases-section').style.display = 'none';
+                        document.getElementById('top-tracks-section').style.display = 'none';
+                        document.getElementById('top-artists-section').style.display = 'none';
+
+                        const resultsSection = document.getElementById('search-results-section');
+                        resultsSection.style.display = 'block';
+                        document.getElementById('search-results-title').innerText = `Buscando por "${searchInput.value}"...`;
+
+                        const results = await searchSpotify(searchInput.value, token);
+                        renderList(results, 'search-results-scroll', 'mixed');
+                        document.getElementById('search-results-title').innerText = `Resultados para "${searchInput.value}"`;
+                    }
+                });
+            } else {
+                console.error("Token não gerado. Verifique conexão/chaves.");
+            }
         });
-
     </script>
 </body>
 

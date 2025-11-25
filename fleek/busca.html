@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLEEK - Buscar</title>
+
+    <style>
+        /* ==========================================================
+           1. ESTILOS GERAIS
+           ========================================================== */
+        :root {
+            --bg-color: linear-gradient(135deg, #121212 0%, #0a0a0a 100%);
+            --text-color: #ffffff;
+            --text-muted: #b3b3b3;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-hover: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --blur-amount: 20px;
+            --accent-color: #9f55ff;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        :root.light-mode {
+            --bg-color: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --text-color: #1a1a1a;
+            --text-muted: #555;
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --card-hover: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            padding-top: 90px;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        /* --- HEADER --- */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4vw;
+            height: 80px;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border-bottom: 1px solid var(--card-border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: background 0.3s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 36px;
+            width: 36px;
+            border-radius: 8px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--text-color);
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        .menu {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .icon-btn:hover,
+        .icon-btn.active {
+            background: var(--card-hover);
+            color: var(--text-color);
+            transform: scale(1.05);
+        }
+
+        .icon-svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2px;
+        }
+
+        #btn-search-nav .icon-svg {
+            stroke: var(--accent-color);
+        }
+
+        /* --- CONTEÚDO --- */
+        .content {
+            padding: 20px 4vw;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 80vh;
+        }
+
+        /* BARRA DE BUSCA */
+        .search-bar-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .main-search-input {
+            width: 100%;
+            padding: 18px 25px 18px 60px;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            font-size: 1.2rem;
+            color: var(--text-color);
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-search-input:focus {
+            border-color: var(--accent-color);
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 30px rgba(159, 85, 255, 0.15);
+        }
+
+        .main-search-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .search-icon-svg {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            stroke: var(--text-muted);
+            pointer-events: none;
+            z-index: 2;
+            /* CORREÇÃO: Garante que o ícone fique acima do input/blur */
+        }
+
+        /* --- SEÇÕES --- */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        section h2::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--accent-color);
+            border-radius: 2px;
+            display: block;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--card-hover);
+            color: var(--text-color);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- GRIDS --- */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 24px;
+        }
+
+        /* CARDS DE GÊNERO */
+        .genre-card {
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            aspect-ratio: 1.5/1;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--card-border);
+        }
+
+        .genre-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border-color: var(--accent-color);
+        }
+
+        .genre-card h3 {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.3);
+            transition: background 0.3s;
+        }
+
+        .genre-card:hover h3 {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* CARDS DE RESULTADO */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            width: 100%;
+            padding: 16px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            background: var(--card-hover);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card .img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .img {
+            transform: scale(1.08);
+        }
+
+        .card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* CARDS DE ARTISTA */
+        .artist-circle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .artist-img-container {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .artist-circle:hover .artist-img-container {
+            border-color: var(--accent-color);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .artist-img {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        .artist-circle:hover .artist-img {
+            transform: scale(1.1);
+        }
+
+        .artist-circle p {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-top: 5px;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            display: block;
+            margin: 60px auto;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="topbar">
+        <a href="index.html" class="logo">
+            <img src="https://placehold.co/100x100/121212/9f55ff?text=F" alt="Fleek Logo">
+            <h1>FLEEK <span>.</span></h1>
+        </a>
+
+        <nav class="menu">
+            <a href="index.html" class="icon-btn" aria-label="Home">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </a>
+            <button class="icon-btn active" id="btn-search-nav" aria-label="Pesquisar">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+            <a href="user_account.html" class="icon-btn" aria-label="Perfil">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M4 21v-2a4 4 0 0 1 3-3.87"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </a>
+        </nav>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="content">
+
+        <div class="search-bar-container">
+            <!-- ÍCONE MOVIDO PARA ANTES DO INPUT e COM Z-INDEX PARA FICAR NÍTIDO -->
+            <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="main-search-input" class="main-search-input"
+                placeholder="Busque artistas, músicas ou gêneros..." autofocus>
+        </div>
+
+        <!-- SEÇÃO 1: GÊNEROS -->
+        <section id="genre-section">
+            <div class="section-header">
+                <h2>Explorar Gêneros</h2>
+            </div>
+            <div class="results-grid">
+                <div class="genre-card" onclick="searchGenre('Pop')"
+                    style="background-image: url('https://placehold.co/400x300/e01e37/e01e37?text=.');">
+                    <h3>Pop</h3>
+                </div>
+                <div class="genre-card" onclick="searchGenre('Rock')"
+                    style="background-image: url('https://placehold.co/400x300/277da1/277da1?text=.');">
+                    <h3>Rock</h3>
+                </div>
+                <div class="genre-card" onclick="searchGenre('Sertanejo')"
+                    style="background-image: url('https://placehold.co/400x300/43aa8b/43aa8b?text=.');">
+                    <h3>Sertanejo</h3>
+                </div>
+                <div class="genre-card" onclick="searchGenre('Funk')"
+                    style="background-image: url('https://placehold.co/400x300/577590/577590?text=.');">
+                    <h3>Funk</h3>
+                </div>
+                <div class="genre-card" onclick="searchGenre('Hip-Hop')"
+                    style="background-image: url('https://placehold.co/400x300/f3722c/f3722c?text=.');">
+                    <h3>Hip-Hop</h3>
+                </div>
+                <div class="genre-card" onclick="searchGenre('Electronic')"
+                    style="background-image: url('https://placehold.co/400x300/5d2f91/5d2f91?text=.');">
+                    <h3>Eletrônica</h3>
+                </div>
+                <div class="genre-card" onclick="searchGenre('Pagode')"
+                    style="background-image: url('https://placehold.co/400x300/f9c74f/f9c74f?text=.');">
+                    <h3>Pagode</h3>
+                </div>
+                <div class="genre-card" onclick="searchGenre('Indie')"
+                    style="background-image: url('https://placehold.co/400x300/90be6d/90be6d?text=.');">
+                    <h3>Indie</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: RESULTADOS DA BUSCA -->
+        <section id="search-results-section" class="hidden">
+            <div class="section-header">
+                <button class="back-btn" onclick="resetToGenres()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7" />
+                    </svg>
+                    Voltar
+                </button>
+                <h2 id="search-results-title">Resultados</h2>
+            </div>
+            <div class="results-grid" id="search-results-grid"></div>
+        </section>
+
+        <!-- SEÇÃO 3: DETALHES DO ARTISTA -->
+        <section id="artist-details-section" class="hidden">
+            <div class="section-header">
+                <button class="back-btn" id="back-to-results-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7" />
+                    </svg>
+                    Voltar aos resultados
+                </button>
+                <h2 id="artist-name-title">Músicas Populares</h2>
+            </div>
+            <div class="results-grid" id="artist-tracks-grid"></div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- API SPOTIFY CONFIG ---
+        const clientId = 'acfec55c6b6448c5b8521549f9f1e8dc';
+        const clientSecret = '0ebed43e9c404666ad620e84a6813cb6';
+        let spotifyToken = null;
+        let searchTimer;
+
+        // 1. Autenticação
+        async function getSpotifyToken() {
+            if (spotifyToken) return spotifyToken;
+            const authString = btoa(`${clientId}:${clientSecret}`);
+            try {
+                const response = await fetch('https://accounts.spotify.com/api/token', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Basic ${authString}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'grant_type=client_credentials'
+                });
+                if (!response.ok) throw new Error('Falha Token');
+                const data = await response.json();
+                spotifyToken = data.access_token;
+                return spotifyToken;
+            } catch (e) { console.error(e); return null; }
+        }
+
+        // 2. Busca Geral (Detecta gênero)
+        async function searchSpotify(query) {
+            if (!query) return [];
+            const token = await getSpotifyToken();
+            if (!token) return [];
+
+            try {
+                // Lógica condicional: Se for "genre:", busca SÓ MÚSICAS (tracks)
+                const isGenreSearch = query.includes('genre:');
+                const types = isGenreSearch ? 'track' : 'track,album,artist';
+                const limit = isGenreSearch ? 30 : 15;
+
+                const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=${types}&market=BR&limit=${limit}`;
+                const response = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await response.json();
+
+                if (isGenreSearch) {
+                    return data.tracks?.items || [];
+                }
+                // Se for busca normal, mistura tudo
+                return [...(data.artists?.items || []), ...(data.tracks?.items || []), ...(data.albums?.items || [])];
+            } catch (e) { return []; }
+        }
+
+        // 3. Top Tracks de um Artista
+        async function getArtistTopTracks(artistId) {
+            const token = await getSpotifyToken();
+            try {
+                const url = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=BR`;
+                const response = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await response.json();
+                return data.tracks;
+            } catch (e) { console.error(e); return []; }
+        }
+
+        // --- LÓGICA DE INTERFACE ---
+
+        // Clique no Gênero
+        function searchGenre(genreName) {
+            const input = document.getElementById('main-search-input');
+            input.value = genreName;
+            performSearch(`genre:"${genreName}"`, `Músicas: ${genreName}`);
+        }
+
+        // Clique no Artista
+        async function openArtistDetails(artistId, artistName) {
+            document.getElementById('artist-tracks-grid').innerHTML = '<div class="loader"></div>';
+
+            document.getElementById('search-results-section').classList.add('hidden');
+            document.getElementById('genre-section').classList.add('hidden');
+            document.getElementById('artist-details-section').classList.remove('hidden');
+
+            document.getElementById('artist-name-title').innerText = `Top Músicas: ${artistName}`;
+
+            const tracks = await getArtistTopTracks(artistId);
+            renderResults(tracks, 'artist-tracks-grid');
+
+            document.getElementById('back-to-results-btn').onclick = () => {
+                document.getElementById('artist-details-section').classList.add('hidden');
+                document.getElementById('search-results-section').classList.remove('hidden');
+            };
+        }
+
+        // Renderiza os Cards
+        function renderResults(results, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            if (results.length === 0) { container.innerHTML = '<p style="color:#777;">Nada encontrado.</p>'; return; }
+
+            results.forEach(item => {
+                const div = document.createElement('div');
+                const images = item.images || (item.album ? item.album.images : []);
+                const imgUrl = (images && images.length > 0) ? images[0].url : 'https://placehold.co/300x300/333/ccc?text=No+Img';
+
+                if (item.type === 'artist') {
+                    div.className = 'artist-circle';
+                    div.onclick = () => openArtistDetails(item.id, item.name);
+                    div.innerHTML = `
+                        <div class="artist-img-container">
+                            <div class="artist-img" style="background-image: url('${imgUrl}')"></div>
+                        </div>
+                        <p>${item.name}</p>
+                    `;
+                } else {
+                    div.className = 'card';
+                    const artist = item.artists ? item.artists[0].name : item.name;
+                    div.innerHTML = `<div class="img" style="background-image: url('${imgUrl}')"></div><h4>${item.name}</h4><p>${artist}</p>`;
+                }
+                container.appendChild(div);
+            });
+        }
+
+        // Executa a busca
+        async function performSearch(apiQuery, displayLabel) {
+            const genreSection = document.getElementById('genre-section');
+            const resultsSection = document.getElementById('search-results-section');
+            const artistSection = document.getElementById('artist-details-section');
+            const grid = document.getElementById('search-results-grid');
+
+            genreSection.classList.add('hidden');
+            artistSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+            grid.innerHTML = '<div class="loader"></div>';
+
+            document.getElementById('search-results-title').innerText = displayLabel || `Resultados para "${apiQuery}"`;
+
+            const results = await searchSpotify(apiQuery);
+            renderResults(results, 'search-results-grid');
+        }
+
+        function resetToGenres() {
+            document.getElementById('main-search-input').value = '';
+            document.getElementById('search-results-section').classList.add('hidden');
+            document.getElementById('artist-details-section').classList.add('hidden');
+            document.getElementById('genre-section').classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Tema
+            const root = document.documentElement;
+            if (localStorage.getItem('fleek-theme') === 'light') root.classList.add('light-mode');
+            const savedAccent = localStorage.getItem('fleek-accent');
+            if (savedAccent) root.style.setProperty('--accent-color', savedAccent);
+
+            await getSpotifyToken();
+
+            const searchInput = document.getElementById('main-search-input');
+
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimer);
+                const query = searchInput.value.trim();
+
+                if (query === "") {
+                    resetToGenres();
+                    return;
+                }
+
+                searchTimer = setTimeout(() => {
+                    performSearch(query);
+                }, 500);
+            });
+        });
+    </script>
+</body>
+
+</html>
