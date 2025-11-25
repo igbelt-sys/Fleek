@@ -12,12 +12,10 @@
 
             font-family: "Inter", Arial, sans-serif;
 
-            /* Removi blur daqui para melhorar escalonamento */
             position: relative;
             overflow: hidden;
         }
 
-        /* Camada escura REAL por cima da imagem */
         body::before {
             content: "";
             position: fixed;
