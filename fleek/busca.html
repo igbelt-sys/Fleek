@@ -8,7 +8,7 @@
 
     <style>
         /* ==========================================================
-           1. ESTILOS GERAIS (Idênticos à Homepage)
+           1. ESTILOS GERAIS (Mantendo a base)
            ========================================================== */
         :root {
             --bg-color: linear-gradient(135deg, #121212 0%, #0a0a0a 100%);
@@ -74,7 +74,7 @@
             text-decoration: none;
         }
 
-        /* --- HEADER (TOPBAR) --- */
+        /* --- HEADER --- */
         .topbar {
             display: flex;
             justify-content: space-between;
@@ -90,39 +90,26 @@
             left: 0;
             width: 100%;
             z-index: 1000;
-            transition: background 0.3s ease, border-color 0.3s ease;
+            transition: background 0.3s ease;
         }
 
-        /* LOGO COM GLOW (Igual Home) */
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
             text-decoration: none;
             position: relative;
-        }
-
-        .logo::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 30px;
-            transform: translate(-50%, -50%);
-            width: 55px;
-            height: 55px;
-            background: var(--accent-color);
-            filter: blur(45px);
-            opacity: 1.2;
-            border-radius: 50%;
-            z-index: -1;
             transition: all 0.3s ease;
         }
 
+        /* LOGO COM GLOW CORRIGIDO (Igual Home) */
         .logo img {
             height: 60px;
             width: auto;
             object-fit: contain;
             z-index: 1;
+            filter: drop-shadow(0 0 12px var(--accent-color)) drop-shadow(0 0 35px var(--accent-color));
+            transition: filter 0.3s ease;
         }
 
         .logo h1 {
@@ -132,7 +119,6 @@
             color: var(--text-color);
         }
 
-        /* MENU ÍCONES */
         .menu {
             display: flex;
             gap: 15px;
@@ -152,14 +138,11 @@
             transition: all 0.2s ease;
         }
 
-        /* Hover colorido com o tema */
         .icon-btn:hover,
         .icon-btn.active {
             background: var(--card-hover);
-            color: var(--accent-color);
-            /* Ícone fica da cor do tema */
+            color: var(--text-color);
             transform: scale(1.05);
-            box-shadow: 0 0 15px var(--card-bg);
         }
 
         .icon-svg {
@@ -168,10 +151,8 @@
             stroke-width: 2px;
         }
 
-        /* Botão ativo nesta página (Busca) */
-        #btn-search-nav {
-            color: var(--accent-color);
-            background: var(--card-hover);
+        #btn-search-nav .icon-svg {
+            stroke: var(--accent-color);
         }
 
         /* --- CONTEÚDO --- */
@@ -185,22 +166,18 @@
             min-height: 80vh;
         }
 
-        /* BARRA DE BUSCA (Harmônica e Centralizada) */
+        /* BARRA DE BUSCA (Glass Effect) */
         .search-bar-container {
             position: relative;
             width: 100%;
             max-width: 800px;
-            /* Limita a largura para não ficar gigante */
-            margin: 20px auto 40px auto;
-            /* Centraliza horizontalmente e dá margem */
+            margin: 10px auto 30px auto;
         }
 
         .main-search-input {
             width: 100%;
-            padding: 20px 30px 20px 60px;
-            /* Padding mais generoso */
+            padding: 18px 25px 18px 60px;
             border-radius: 50px;
-            /* Formato de pílula (redondo nas pontas) */
             border: 1px solid var(--card-border);
             background-color: var(--input-bg);
             backdrop-filter: blur(12px);
@@ -209,24 +186,30 @@
             color: var(--text-color);
             outline: none;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .main-search-input:focus {
             border-color: var(--accent-color);
             background-color: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 30px rgba(159, 85, 255, 0.15);
-            /* Glow colorido no focus */
+            /* Sombra dinâmica usando a cor do tema */
+            box-shadow: 0 0 20px var(--accent-color);
         }
 
+        /* CORREÇÃO AQUI: Placeholder no Modo Escuro */
         .main-search-input::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
 
+        /* CORREÇÃO AQUI: Placeholder no Modo Claro */
+        :root.light-mode .main-search-input::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+
         .search-icon-svg {
             position: absolute;
             left: 25px;
-            /* Ajustado para o novo padding */
             top: 50%;
             transform: translateY(-50%);
             width: 24px;
@@ -254,7 +237,6 @@
             gap: 10px;
         }
 
-        /* Barra lateral do título colorida */
         section h2::before {
             content: '';
             width: 4px;
@@ -289,51 +271,111 @@
             display: none !important;
         }
 
-        /* --- GRIDS --- */
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 24px;
         }
 
-        /* CARDS DE GÊNERO */
+        /* ==========================================================
+           NOVOS CARDS DE GÊNERO (DESIGN PREMIUM GLASS)
+           ========================================================== */
         .genre-card {
-            background-size: cover;
-            background-position: center;
-            border-radius: 12px;
-            aspect-ratio: 1.5/1;
-            overflow: hidden;
             position: relative;
+            border-radius: 16px;
+            aspect-ratio: 1.8/1;
+            overflow: hidden;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid var(--card-border);
-        }
-
-        .genre-card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            border-color: var(--accent-color);
-            /* Borda colorida no hover */
-        }
-
-        .genre-card h3 {
-            position: absolute;
-            inset: 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
+            align-items: flex-start;
+            padding: 20px;
+
+            /* EFEITO GLASS APLICADO AQUI */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        /* Gradientes Específicos para cada Gênero (Semi-transparentes para o Glass) */
+        /* Usando rgba para transparência */
+        .genre-pop {
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.7), rgba(121, 40, 202, 0.7));
+        }
+
+        .genre-rock {
+            background: linear-gradient(135deg, rgba(224, 32, 32, 0.7), rgba(250, 100, 0, 0.7));
+        }
+
+        .genre-sertanejo {
+            background: linear-gradient(135deg, rgba(0, 176, 155, 0.7), rgba(150, 201, 61, 0.7));
+        }
+
+        .genre-funk {
+            background: linear-gradient(135deg, rgba(142, 45, 226, 0.7), rgba(74, 0, 224, 0.7));
+        }
+
+        .genre-hiphop {
+            background: linear-gradient(135deg, rgba(241, 39, 17, 0.7), rgba(245, 175, 25, 0.7));
+        }
+
+        .genre-eletronica {
+            background: linear-gradient(135deg, rgba(0, 198, 255, 0.7), rgba(0, 114, 255, 0.7));
+        }
+
+        .genre-pagode {
+            background: linear-gradient(135deg, rgba(248, 87, 166, 0.7), rgba(255, 88, 88, 0.7));
+        }
+
+        .genre-indie {
+            background: linear-gradient(135deg, rgba(17, 153, 142, 0.7), rgba(56, 239, 125, 0.7));
+        }
+
+        /* Hover Effect */
+        .genre-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Título do Gênero */
+        .genre-card h3 {
+            font-size: 1.5rem;
             font-weight: 800;
             color: #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+            margin: 0;
             text-transform: uppercase;
             letter-spacing: 1px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-            background: rgba(0, 0, 0, 0.3);
-            transition: background 0.3s;
         }
 
-        .genre-card:hover h3 {
-            background: rgba(0, 0, 0, 0.1);
+        /* Ícone de Fundo Gigante (Decoração) */
+        .genre-icon-bg {
+            position: absolute;
+            bottom: -10px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            transform: rotate(25deg);
+            opacity: 0.6;
+            /* Um pouco mais transparente para o glass */
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s ease;
+            z-index: 1;
+        }
+
+        /* Animação do ícone no hover */
+        .genre-card:hover .genre-icon-bg {
+            transform: rotate(15deg) scale(1.1) translate(-5px, -5px);
+            opacity: 0.8;
+        }
+
+        .genre-icon-bg svg {
+            width: 100%;
+            height: 100%;
+            fill: #fff;
         }
 
         /* CARDS DE RESULTADO */
@@ -347,8 +389,8 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
         }
 
         .card:hover {
@@ -358,21 +400,10 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Glow sutil no hover */
-        .card:hover::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, var(--accent-color), transparent 70%);
-            opacity: 0.1;
-            z-index: 0;
-            pointer-events: none;
-        }
-
         .card .img {
             width: 100%;
             aspect-ratio: 1/1;
-            border-radius: 8px;
+            border-radius: 12px;
             margin-bottom: 12px;
             background-size: cover;
             background-position: center;
@@ -487,14 +518,15 @@
             height: 160px;
             border-radius: 50%;
             overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             border: 3px solid transparent;
             transition: all 0.3s ease;
+            background: var(--card-bg);
         }
 
         .artist-circle:hover .artist-img-container {
             border-color: var(--accent-color);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .artist-img {
@@ -518,7 +550,6 @@
 
         .artist-circle:hover p {
             color: var(--accent-color);
-            text-shadow: 0 0 8px var(--accent-color);
         }
 
         .loader {
@@ -532,6 +563,11 @@
             animation: spin 1s linear infinite;
         }
 
+        .light-mode .loader {
+            border-color: rgba(0, 0, 0, 0.1);
+            border-top-color: var(--accent-color);
+        }
+
         @keyframes spin {
             to {
                 transform: rotate(360deg);
@@ -543,14 +579,14 @@
             position: fixed;
             top: 90px;
             right: 4vw;
-            background: rgba(20, 20, 20, 0.95);
+            background: var(--card-bg);
             border: 1px solid var(--card-border);
             backdrop-filter: blur(30px);
             border-radius: 16px;
             padding: 24px;
             width: 320px;
             z-index: 2000;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
             opacity: 0;
             visibility: hidden;
             transform: translateY(10px) scale(0.98);
@@ -572,13 +608,13 @@
 
         .popover-header h3 {
             font-size: 1.1rem;
-            color: white;
+            color: var(--text-color);
         }
 
         .close-btn {
             background: none;
             border: none;
-            color: #888;
+            color: var(--text-muted);
             font-size: 1.5rem;
             cursor: pointer;
         }
@@ -593,7 +629,10 @@
             margin-bottom: 20px;
         }
 
-        /* Palette Grid */
+        .light-mode .theme-toggle {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
         .color-palette {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -667,9 +706,7 @@
             <h1>FLEEK</h1>
         </a>
 
-        <!-- MENU (Ícones) -->
         <nav class="menu">
-            <!-- Ícone Home (Link para index.html) -->
             <a href="index.html" class="icon-btn" aria-label="Home">
                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"
                     stroke-linejoin="round">
@@ -677,8 +714,6 @@
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
             </a>
-
-            <!-- Ícone Busca (Ativo - já estamos na página) -->
             <button class="icon-btn active" id="btn-search-nav" aria-label="Pesquisar">
                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -686,16 +721,12 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
             </button>
-
-            <!-- Ícone Tema -->
             <button class="icon-btn" id="btn-theme" aria-label="Tema">
                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                 </svg>
             </button>
-
-            <!-- Ícone Perfil -->
             <a href="user_account.html" class="icon-btn" aria-label="Perfil">
                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -712,14 +743,14 @@
         <div class="popover-header">
             <h3>Aparência</h3><button class="close-btn" id="close-popover">&times;</button>
         </div>
-        <div class="theme-toggle"><span style="color: #ccc; font-size: 0.9rem;">Modo Claro</span><label
+        <div class="theme-toggle"><span style="color: var(--text-muted); font-size: 0.9rem;">Modo Claro</span><label
                 class="switch"><input type="checkbox" id="light-dark-toggle"><span class="slider"></span></label></div>
         <div style="margin-top: 15px;">
             <h4
-                style="color: #888; font-size: 0.8rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">
+                style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">
                 Cor de Destaque</h4>
             <div class="color-palette">
-                <div class="color-swatch" data-color="#e0e0e0" style="background: #e0e0e0; border: 1px solid #555;"
+                <div class="color-swatch" data-color="#B0B0B0" style="background: #B0B0B0; border: 1px solid #888;"
                     title="Padrão (Prata)"></div>
                 <div class="color-swatch" data-color="#9f55ff" style="background: #9f55ff;"></div>
                 <div class="color-swatch" data-color="#2563eb" style="background: #2563eb;"></div>
@@ -735,7 +766,6 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="content">
 
-        <!-- BARRA DE PESQUISA (CENTRALIZADA) -->
         <div class="search-bar-container">
             <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -746,44 +776,94 @@
                 placeholder="Busque artistas, músicas ou gêneros..." autofocus>
         </div>
 
-        <!-- SEÇÃO 1: GÊNEROS -->
+        <!-- SEÇÃO 1: GÊNEROS COM ÍCONES SVG -->
         <section id="genre-section">
             <div class="section-header">
                 <h2>Explorar Gêneros</h2>
             </div>
             <div class="results-grid">
-                <div class="genre-card" onclick="searchGenre('Pop')"
-                    style="background-image: url('https://placehold.co/400x300/e01e37/e01e37?text=.');">
+
+                <div class="genre-card genre-pop" onclick="searchGenre('Pop')">
                     <h3>Pop</h3>
+                    <div class="genre-icon-bg">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 18V5l12-2v13"></path>
+                            <circle cx="6" cy="18" r="3"></circle>
+                            <circle cx="18" cy="16" r="3"></circle>
+                        </svg>
+                    </div>
                 </div>
-                <div class="genre-card" onclick="searchGenre('Rock')"
-                    style="background-image: url('https://placehold.co/400x300/277da1/277da1?text=.');">
+
+                <div class="genre-card genre-rock" onclick="searchGenre('Rock')">
                     <h3>Rock</h3>
+                    <div class="genre-icon-bg">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
+                    </div>
                 </div>
-                <div class="genre-card" onclick="searchGenre('Sertanejo')"
-                    style="background-image: url('https://placehold.co/400x300/43aa8b/43aa8b?text=.');">
+
+                <div class="genre-card genre-sertanejo" onclick="searchGenre('Sertanejo')">
                     <h3>Sertanejo</h3>
+                    <div class="genre-icon-bg">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                            </path>
+                        </svg>
+                    </div>
                 </div>
-                <div class="genre-card" onclick="searchGenre('Funk')"
-                    style="background-image: url('https://placehold.co/400x300/577590/577590?text=.');">
+
+                <div class="genre-card genre-funk" onclick="searchGenre('Funk')">
                     <h3>Funk</h3>
+                    <div class="genre-icon-bg">
+                        <svg viewBox="0 0 24 24">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                        </svg>
+                    </div>
                 </div>
-                <div class="genre-card" onclick="searchGenre('Hip-Hop')"
-                    style="background-image: url('https://placehold.co/400x300/f3722c/f3722c?text=.');">
+
+                <div class="genre-card genre-hiphop" onclick="searchGenre('Hip-Hop')">
                     <h3>Hip-Hop</h3>
+                    <div class="genre-icon-bg">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </div>
                 </div>
-                <div class="genre-card" onclick="searchGenre('Electronic')"
-                    style="background-image: url('https://placehold.co/400x300/5d2f91/5d2f91?text=.');">
+
+                <div class="genre-card genre-eletronica" onclick="searchGenre('Electronic')">
                     <h3>Eletrônica</h3>
+                    <div class="genre-icon-bg">
+                        <svg viewBox="0 0 24 24">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                    </div>
                 </div>
-                <div class="genre-card" onclick="searchGenre('Pagode')"
-                    style="background-image: url('https://placehold.co/400x300/f9c74f/f9c74f?text=.');">
+
+                <div class="genre-card genre-pagode" onclick="searchGenre('Pagode')">
                     <h3>Pagode</h3>
+                    <div class="genre-icon-bg">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M2 12h20"></path>
+                            <path d="M12 2v20"></path>
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                    </div>
                 </div>
-                <div class="genre-card" onclick="searchGenre('Indie')"
-                    style="background-image: url('https://placehold.co/400x300/90be6d/90be6d?text=.');">
+
+                <div class="genre-card genre-indie" onclick="searchGenre('Indie')">
                     <h3>Indie</h3>
+                    <div class="genre-icon-bg">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2.69l5.74 9.94H6.26L12 2.69zM12 21.31l-5.74-9.94h11.48L12 21.31z"></path>
+                        </svg>
+                    </div>
                 </div>
+
             </div>
         </section>
 
@@ -833,7 +913,7 @@
                 const data = await res.json();
                 if (data.results && data.results.length > 0) return data.results[0].previewUrl;
                 return null;
-            } catch (e) { console.error(e); return null; }
+            } catch (e) { console.error("Erro iTunes:", e); return null; }
         }
 
         async function playTrack(btn, spotifyPreviewUrl, songName, artistName, spotifyLink) {
@@ -853,7 +933,6 @@
             }
 
             let audioUrl = spotifyPreviewUrl;
-
             if (!audioUrl || audioUrl === 'null' || audioUrl === 'undefined') {
                 btn.closest('.card').classList.add('loading');
                 audioUrl = await getItunesPreview(songName, artistName);
@@ -909,10 +988,8 @@
                 const types = isGenreSearch ? 'track' : 'track,album,artist';
                 const limit = isGenreSearch ? 30 : 15;
                 const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=${types}&market=BR&limit=${limit}`;
-
                 const response = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
                 const data = await response.json();
-
                 if (isGenreSearch) return data.tracks?.items || [];
                 return [...(data.artists?.items || []), ...(data.tracks?.items || []), ...(data.albums?.items || [])];
             } catch (e) { return []; }
@@ -928,7 +1005,7 @@
             } catch (e) { console.error(e); return []; }
         }
 
-        // --- LÓGICA DE INTERFACE ---
+        // --- INTERFACE ---
 
         function searchGenre(genreName) {
             const input = document.getElementById('main-search-input');
@@ -955,21 +1032,20 @@
         function renderResults(results, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
-            if (results.length === 0) { container.innerHTML = '<p style="color:#777;">Nada encontrado.</p>'; return; }
+            if (results.length === 0) { container.innerHTML = '<p style="color: var(--text-muted);">Nada encontrado.</p>'; return; }
 
             results.forEach(item => {
                 const div = document.createElement('div');
                 const images = item.images || (item.album ? item.album.images : []);
                 const imgUrl = (images && images.length > 0) ? images[0].url : 'https://placehold.co/300x300/333/ccc?text=No+Img';
-
                 let title = item.name;
-                let sub = '';
 
                 if (item.type === 'artist') {
                     div.className = 'artist-circle';
                     div.onclick = () => openArtistDetails(item.id, item.name);
                     div.innerHTML = `<div class="artist-img-container"><div class="artist-img" style="background-image: url('${imgUrl}')"></div></div><p>${title}</p>`;
                 } else {
+                    // CARD COM PLAYER
                     div.className = 'card';
                     const artist = item.artists ? item.artists[0].name : item.name;
                     const previewUrl = item.preview_url;
@@ -1004,7 +1080,6 @@
             artistSection.classList.add('hidden');
             resultsSection.classList.remove('hidden');
             grid.innerHTML = '<div class="loader"></div>';
-
             document.getElementById('search-results-title').innerText = displayLabel || `Resultados para "${apiQuery}"`;
 
             const results = await searchSpotify(apiQuery);
@@ -1019,7 +1094,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Tema (Igual Home)
+            // Tema
             const root = document.documentElement;
             const themeBtn = document.getElementById('btn-theme');
             const popover = document.getElementById('theme-popover');
@@ -1045,7 +1120,7 @@
             }
             const savedAccent = localStorage.getItem('fleek-accent-v2');
             if (!savedAccent || savedAccent === '#9f55ff') {
-                root.style.setProperty('--accent-color', '#e0e0e0');
+                root.style.setProperty('--accent-color', '#B0B0B0'); // Prata padrão
             } else {
                 root.style.setProperty('--accent-color', savedAccent);
             }
@@ -1056,15 +1131,8 @@
             searchInput.addEventListener('input', () => {
                 clearTimeout(searchTimer);
                 const query = searchInput.value.trim();
-
-                if (query === "") {
-                    resetToGenres();
-                    return;
-                }
-
-                searchTimer = setTimeout(() => {
-                    performSearch(query);
-                }, 500);
+                if (query === "") { resetToGenres(); return; }
+                searchTimer = setTimeout(() => { performSearch(query); }, 500);
             });
         });
     </script>
