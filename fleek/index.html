@@ -18,8 +18,8 @@
             --card-hover: rgba(255, 255, 255, 0.1);
             --card-border: rgba(255, 255, 255, 0.05);
             --blur-amount: 20px;
-            /* COR INICIAL PADRÃO: Branco/Cinza (Prata) */
             --accent-color: #e0e0e0;
+            --header-bg: rgba(10, 10, 10, 0.7);
             --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
@@ -27,9 +27,10 @@
             --bg-color: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             --text-color: #1a1a1a;
             --text-muted: #555;
-            --card-bg: rgba(255, 255, 255, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.7);
             --card-hover: rgba(255, 255, 255, 0.9);
             --card-border: rgba(0, 0, 0, 0.05);
+            --header-bg: rgba(255, 255, 255, 0.85);
         }
 
         * {
@@ -42,7 +43,7 @@
             font-family: var(--font-main);
             background: var(--bg-color);
             color: var(--text-color);
-            transition: background 0.5s ease;
+            transition: background 0.5s ease, color 0.5s ease;
             min-height: 100vh;
             padding-top: 90px;
             overflow-x: hidden;
@@ -76,7 +77,7 @@
             align-items: center;
             padding: 0 4vw;
             height: 80px;
-            background: rgba(10, 10, 10, 0.7);
+            background: var(--header-bg);
             backdrop-filter: blur(var(--blur-amount));
             -webkit-backdrop-filter: blur(var(--blur-amount));
             border-bottom: 1px solid var(--card-border);
@@ -85,7 +86,7 @@
             left: 0;
             width: 100%;
             z-index: 1000;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         /* LOGO COM EFEITO GLOW/BLUR DINÂMICO */
@@ -95,30 +96,23 @@
             gap: 12px;
             text-decoration: none;
             position: relative;
-            /* Necessário para posicionar o blur */
+            transition: all 0.3s ease;
         }
 
-        /* A "Voltinha" Blur atrás da logo */
         .logo::before {
             content: '';
             position: absolute;
             top: 50%;
-            /* AJUSTE: Movi mais para a esquerda (era 20px, agora 15px) para centralizar melhor */
-            left: 15px;
+            left: 30px;
             transform: translate(-50%, -50%);
-            width: 45px;
-            /* Um pouco maior para espalhar melhor */
-            height: 45px;
+            width: 55px;
+            height: 55px;
             background: var(--accent-color);
-            /* Pega a cor do tema! */
-            filter: blur(25px);
-            /* O desfoque suave */
-            opacity: 0.6;
-            /* Transparência para não ofuscar */
+            filter: blur(45px);
+            opacity: 1.2;
             border-radius: 50%;
             z-index: -1;
-            /* Fica atrás da imagem */
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
         }
 
         .logo img {
@@ -126,7 +120,6 @@
             width: auto;
             object-fit: contain;
             z-index: 1;
-            /* Garante que a logo fique na frente do blur */
         }
 
         .logo h1 {
@@ -138,57 +131,7 @@
 
         .logo span {
             color: var(--accent-color);
-            text-shadow: 0 0 10px var(--accent-color);
-        }
-
-        /* Ponto brilhante também */
-
-        /* Barra de Pesquisa Animada */
-        .search-container {
-            flex-grow: 1;
-            max-width: 500px;
-            margin: 0 40px;
-            position: relative;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            display: none;
-        }
-
-        .search-container.active {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateY(0);
-            display: block;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 20px;
-            padding-left: 45px;
-            border-radius: 50px;
-            border: 1px solid var(--card-border);
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-color);
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
-        }
-
-        .search-icon-inside {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            width: 18px;
+            text-shadow: 0 0 10px var(--accent-color), 0 0 25px var(--accent-color), 0 0 40px var(--accent-color);
         }
 
         .menu {
@@ -273,6 +216,9 @@
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+
             border-radius: 12px;
             width: 200px;
             flex-shrink: 0;
@@ -286,12 +232,11 @@
         .card:hover {
             transform: translateY(-8px);
             background: var(--card-hover);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .card:hover::before {
-            /* Glow suave no card hover */
             content: '';
             position: absolute;
             inset: 0;
@@ -324,10 +269,11 @@
             transform: scale(1.08);
         }
 
+        /* Player Overlay e Botão */
         .play-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -335,14 +281,13 @@
             transition: opacity 0.3s ease;
         }
 
-        .card:hover .play-overlay {
+        .card:hover .play-overlay,
+        .card.playing .play-overlay {
             opacity: 1;
         }
 
         .play-btn-small {
-            width: 45px;
-            height: 45px;
-            background: var(--accent-color);
+            background-color: var(--accent-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -350,27 +295,45 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
             transform: translateY(10px);
             transition: transform 0.3s ease;
+            width: 45px;
+            height: 45px;
         }
 
-        .card:hover .play-btn-small {
+        .card:hover .play-btn-small,
+        .card.playing .play-btn-small {
             transform: translateY(0);
         }
 
         .play-btn-small svg {
+            fill: #ffffff;
             width: 20px;
             height: 20px;
-            fill: white;
             margin-left: 3px;
         }
 
-        /* Ícone play sempre branco ou preto dependendo do contraste */
-
-        /* Ajuste para o ícone play ser visível se a cor de destaque for muito clara */
-        .play-btn-small svg {
-            fill: #121212;
+        .card.playing .play-btn-small svg.icon-play {
+            display: none;
         }
 
-        /* Preto fica melhor em cores claras como o cinza/branco */
+        .card.playing .play-btn-small svg.icon-pause {
+            display: block !important;
+            margin-left: 0;
+        }
+
+        .card.loading .play-btn-small svg {
+            display: none;
+        }
+
+        .card.loading .play-btn-small::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+            display: block;
+        }
 
         .card h4 {
             font-size: 1rem;
@@ -421,7 +384,6 @@
         .artist-circle:hover .artist-img-container {
             border-color: var(--accent-color);
             box-shadow: 0 0 20px var(--accent-color);
-            /* Glow na borda */
         }
 
         .artist-img {
@@ -525,11 +487,10 @@
 
         .color-palette {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
         }
 
-        /* Ajustado para caber mais uma cor */
         .color-swatch {
             width: 100%;
             aspect-ratio: 1/1;
@@ -591,23 +552,13 @@
 <body>
 
     <!-- HEADER -->
-    <header class="topbar">
+    <header class="topbar" id="main-header">
         <a href="index.html" class="logo">
             <img src="logopng.png" alt="Fleek Logo">
-            <h1>FLEEK <span>.</span></h1>
+            <h1>FLEEK</h1>
         </a>
 
-        <div class="search-container" id="search-bar-container">
-            <svg class="search-icon-inside" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" id="search-input" class="search-input" placeholder="O que você quer ouvir hoje?">
-        </div>
-
         <nav class="menu">
-            <!-- 1. Playlist (Ícone Lista) -->
             <a href="#" class="icon-btn" aria-label="Playlist">
                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -619,16 +570,15 @@
                 </svg>
             </a>
 
-            <!-- 2. Busca (Lupa - Toggle) -->
-            <button class="icon-btn" id="btn-search" aria-label="Buscar">
+            <!-- BOTÃO DE BUSCA AGORA É LINK -->
+            <a href="busca.html" class="icon-btn" aria-label="Buscar">
                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                     stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-            </button>
+            </a>
 
-            <!-- 3. Tema (Lua) -->
             <button class="icon-btn" id="btn-theme" aria-label="Tema">
                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -636,8 +586,7 @@
                 </svg>
             </button>
 
-            <!-- 4. Conta (Bonequinho Padrão) -->
-            <a href="user_account.html" class="icon-btn" aria-label="Perfil">
+            <a href="conta.html" class="icon-btn" aria-label="Perfil">
                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -651,67 +600,120 @@
     <!-- POPOVER DE TEMA -->
     <div class="theme-popover" id="theme-popover">
         <div class="popover-header">
-            <h3>Aparência</h3>
-            <button class="close-btn" id="close-popover">&times;</button>
+            <h3>Aparência</h3><button class="close-btn" id="close-popover">&times;</button>
         </div>
-        <div class="theme-toggle">
-            <span style="color: #ccc; font-size: 0.9rem;">Modo Claro</span>
-            <label class="switch"><input type="checkbox" id="light-dark-toggle"><span class="slider"></span></label>
-        </div>
+        <div class="theme-toggle"><span style="color: #ccc; font-size: 0.9rem;">Modo Claro</span><label
+                class="switch"><input type="checkbox" id="light-dark-toggle"><span class="slider"></span></label></div>
         <div style="margin-top: 15px;">
             <h4
                 style="color: #888; font-size: 0.8rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">
                 Cor de Destaque</h4>
             <div class="color-palette">
-                <!-- NOVA COR PADRÃO (Prata/Branco) -->
                 <div class="color-swatch" data-color="#e0e0e0" style="background: #e0e0e0; border: 1px solid #555;"
                     title="Padrão (Prata)"></div>
-
                 <div class="color-swatch" data-color="#9f55ff" style="background: #9f55ff;"></div>
                 <div class="color-swatch" data-color="#2563eb" style="background: #2563eb;"></div>
                 <div class="color-swatch" data-color="#10b981" style="background: #10b981;"></div>
                 <div class="color-swatch" data-color="#f59e0b" style="background: #f59e0b;"></div>
                 <div class="color-swatch" data-color="#ef4444" style="background: #ef4444;"></div>
+                <div class="color-swatch" data-color="#1a1a1a" style="background: #1a1a1a; border: 1px solid #555;"
+                    title="Escuro"></div>
             </div>
         </div>
     </div>
 
     <!-- MAIN CONTENT -->
     <main class="content">
-
-        <!-- SEÇÃO DE BUSCA (Resultados) -->
-        <section id="search-results-section" style="display: none;">
-            <h2 id="search-results-title">Resultados da Busca</h2>
-            <div class="scroll" id="search-results-scroll"></div>
-        </section>
-
-        <!-- 1. LANÇAMENTOS DA SEMANA -->
         <section id="new-releases-section">
             <h2>Lançamentos da Semana</h2>
             <div class="scroll" id="recommendations-scroll">
                 <div class="loader"></div>
             </div>
         </section>
-
-        <!-- 2. TOP 50 BRASIL -->
         <section id="top-tracks-section">
             <h2>Em Alta no Brasil 🇧🇷</h2>
             <div class="scroll" id="top-tracks-scroll">
                 <div class="loader"></div>
             </div>
         </section>
-
-        <!-- 3. ARTISTAS EM DESTAQUE -->
         <section id="top-artists-section">
             <h2>Artistas em Destaque</h2>
             <div class="scroll" id="artists-scroll">
                 <div class="loader"></div>
             </div>
         </section>
-
     </main>
 
     <script>
+        // ==========================================
+        // PLAYER DE ÁUDIO HÍBRIDO (Spotify + iTunes Fallback)
+        // ==========================================
+        let currentAudio = null;
+        let currentPlayBtn = null;
+
+        async function getItunesPreview(songName, artistName) {
+            try {
+                const query = `${songName} ${artistName}`;
+                const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=1`);
+                const data = await res.json();
+                if (data.results && data.results.length > 0) return data.results[0].previewUrl;
+                return null;
+            } catch (e) {
+                console.error("Erro iTunes:", e);
+                return null;
+            }
+        }
+
+        async function playTrack(btn, spotifyPreviewUrl, songName, artistName, spotifyLink) {
+            // 1. Se já estiver tocando este botão, pausa.
+            if (currentPlayBtn === btn && currentAudio) {
+                if (currentAudio.paused) {
+                    currentAudio.play();
+                    btn.closest('.card').classList.add('playing');
+                } else {
+                    currentAudio.pause();
+                    btn.closest('.card').classList.remove('playing');
+                }
+                return;
+            }
+
+            // 2. Para qualquer outro áudio tocando
+            if (currentAudio) {
+                currentAudio.pause();
+                if (currentPlayBtn) currentPlayBtn.closest('.card').classList.remove('playing');
+            }
+
+            let audioUrl = spotifyPreviewUrl;
+
+            if (!audioUrl || audioUrl === 'null' || audioUrl === 'undefined') {
+                btn.closest('.card').classList.add('loading');
+                audioUrl = await getItunesPreview(songName, artistName);
+                btn.closest('.card').classList.remove('loading');
+            }
+
+            if (audioUrl) {
+                currentAudio = new Audio(audioUrl);
+                currentPlayBtn = btn;
+
+                currentAudio.play()
+                    .then(() => {
+                        btn.closest('.card').classList.add('playing');
+                    })
+                    .catch(e => {
+                        console.error("Erro reprodução:", e);
+                        alert("Erro ao reproduzir o áudio.");
+                    });
+
+                currentAudio.onended = () => {
+                    btn.closest('.card').classList.remove('playing');
+                    currentAudio = null;
+                };
+            } else {
+                if (spotifyLink) window.open(spotifyLink, '_blank');
+                else alert("Música indisponível.");
+            }
+        }
+
         // ==========================================
         // CONFIGURAÇÃO E API (SPOTIFY)
         // ==========================================
@@ -721,14 +723,15 @@
 
         async function getSpotifyToken() {
             if (spotifyToken) return spotifyToken;
+            const authString = btoa(`${clientId}:${clientSecret}`);
             try {
-                const res = await fetch('https://accounts.spotify.com/api/token', {
+                const response = await fetch('https://accounts.spotify.com/api/token', {
                     method: 'POST',
-                    headers: { 'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret), 'Content-Type': 'application/x-www-form-urlencoded' },
+                    headers: { 'Authorization': `Basic ${authString}`, 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'grant_type=client_credentials'
                 });
-                if (!res.ok) throw new Error('Auth Failed');
-                const data = await res.json();
+                if (!response.ok) throw new Error('Falha Token');
+                const data = await response.json();
                 spotifyToken = data.access_token;
                 return spotifyToken;
             } catch (e) { console.error("Token Error:", e); return null; }
@@ -746,16 +749,12 @@
             try {
                 const playlistId = '37i9dQZEVXbMXbN3EUUhlg';
                 const res = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=12`, { headers: { 'Authorization': `Bearer ${token}` } });
-
                 if (res.ok) {
                     const data = await res.json();
-                    if (data.items && data.items.length > 0) {
-                        return data.items.map(item => item.track);
-                    }
+                    if (data.items && data.items.length > 0) return data.items.map(item => item.track);
                 }
-                throw new Error("Playlist Vazia ou Erro");
+                throw new Error("Playlist Vazia");
             } catch (e) {
-                console.warn("Fallback para Busca de Tracks:", e);
                 try {
                     const searchRes = await fetch(`https://api.spotify.com/v1/search?q=Top%20Brasil&type=track&market=BR&limit=12`, { headers: { 'Authorization': `Bearer ${token}` } });
                     const searchData = await searchRes.json();
@@ -769,15 +768,10 @@
                 const tracks = await getTopTracks(token);
                 const artistIds = new Set();
                 tracks.forEach(t => { if (t && t.artists) t.artists.slice(0, 1).forEach(a => artistIds.add(a.id)); });
-
                 const ids = Array.from(artistIds).slice(0, 10).join(',');
-
                 if (ids) {
                     const res = await fetch(`https://api.spotify.com/v1/artists?ids=${ids}`, { headers: { 'Authorization': `Bearer ${token}` } });
-                    if (res.ok) {
-                        const data = await res.json();
-                        return data.artists;
-                    }
+                    if (res.ok) { const data = await res.json(); return data.artists; }
                 }
                 throw new Error("Ids Vazios");
             } catch (e) {
@@ -789,87 +783,64 @@
             }
         }
 
-        async function searchSpotify(query, token) {
-            try {
-                const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track,artist,album&limit=10`, { headers: { 'Authorization': `Bearer ${token}` } });
-                const data = await res.json();
-                return [...(data.tracks?.items || []), ...(data.artists?.items || [])];
-            } catch (e) { return []; }
-        }
-
-        function createCard(image, title, subtitle, isRound = false) {
+        function createCard(item, type) {
             const div = document.createElement('div');
-            if (isRound) {
+            let img = 'https://placehold.co/200?text=No+Img';
+            let title = item.name;
+            let sub = '';
+
+            if (type === 'artist' || item.type === 'artist') {
+                if (item.images && item.images.length > 0) img = item.images[0].url;
                 div.className = 'artist-circle';
-                div.innerHTML = `
-                    <div class="artist-img-container">
-                        <div class="artist-img" style="background-image: url('${image}');"></div>
-                    </div>
-                    <p>${title}</p>
-                `;
-            } else {
-                div.className = 'card';
-                div.innerHTML = `
-                    <div class="card-img-wrapper">
-                        <div class="img" style="background-image: url('${image}');"></div>
-                        <div class="play-overlay"><div class="play-btn-small"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
-                    </div>
-                    <h4>${title}</h4>
-                    <p>${subtitle}</p>
-                `;
+                div.innerHTML = `<div class="artist-img-container"><div class="artist-img" style="background-image: url('${img}');"></div></div><p>${title}</p>`;
+                return div;
             }
+
+            div.className = 'card';
+            if (item.album && item.album.images && item.album.images.length > 0) img = item.album.images[0].url;
+            else if (item.images && item.images.length > 0) img = item.images[0].url;
+
+            if (item.artists) sub = item.artists.map(a => a.name).join(', ');
+
+            const previewUrl = item.preview_url;
+            const spotifyLink = item.external_urls ? item.external_urls.spotify : '';
+            const safeTitle = title.replace(/'/g, "&apos;");
+            const safeArtist = sub.replace(/'/g, "&apos;");
+
+            div.innerHTML = `
+                <div class="card-img-wrapper">
+                    <div class="img" style="background-image: url('${img}');"></div>
+                    <div class="play-overlay">
+                        <div class="play-btn-small" onclick="playTrack(this, '${previewUrl}', '${safeTitle}', '${safeArtist}', '${spotifyLink}')">
+                            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="icon-pause" style="display:none;" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                        </div>
+                    </div>
+                </div>
+                <h4>${title}</h4>
+                <p>${sub}</p>
+            `;
             return div;
         }
 
         function renderList(data, containerId, type) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
-
-            if (!data || data.length === 0) {
-                container.innerHTML = '<p style="color:#666; padding:20px;">Indisponível.</p>';
-                return;
-            }
-
-            data.forEach(item => {
-                let img = 'https://placehold.co/200?text=No+Img';
-                if (type === 'artist' || item.type === 'artist') {
-                    if (item.images && item.images.length > 0) img = item.images[0].url;
-                } else {
-                    if (item.album && item.album.images && item.album.images.length > 0) img = item.album.images[0].url;
-                    else if (item.images && item.images.length > 0) img = item.images[0].url;
-                }
-
-                let title = item.name;
-                let sub = '';
-                let isRound = (type === 'artist' || item.type === 'artist');
-
-                if (!isRound && item.artists) {
-                    sub = item.artists.map(a => a.name).join(', ');
-                }
-                container.appendChild(createCard(img, title, sub, isRound));
-            });
+            if (!data || data.length === 0) { container.innerHTML = '<p style="color:#666; padding:20px;">Indisponível.</p>'; return; }
+            data.forEach(item => container.appendChild(createCard(item, type)));
         }
 
         // ==========================================
         // INICIALIZAÇÃO
         // ==========================================
         document.addEventListener('DOMContentLoaded', async () => {
-
             const root = document.documentElement;
             const themeBtn = document.getElementById('btn-theme');
             const popover = document.getElementById('theme-popover');
             const closePop = document.getElementById('close-popover');
-            const searchBtn = document.getElementById('btn-search');
-            const searchContainer = document.getElementById('search-bar-container');
-            const searchInput = document.getElementById('search-input');
 
             themeBtn.addEventListener('click', () => popover.classList.toggle('active'));
             closePop.addEventListener('click', () => popover.classList.remove('active'));
-
-            searchBtn.addEventListener('click', () => {
-                searchContainer.classList.toggle('active');
-                if (searchContainer.classList.contains('active')) searchInput.focus();
-            });
 
             document.getElementById('light-dark-toggle').addEventListener('change', (e) => {
                 root.classList.toggle('light-mode');
@@ -882,16 +853,17 @@
                 });
             });
 
-            // Recupera tema salvo ou define padrão
             if (localStorage.getItem('fleek-theme') === 'light') {
                 root.classList.add('light-mode');
                 document.getElementById('light-dark-toggle').checked = true;
             }
-            // Use v2 para resetar para cinza na primeira vez
             const savedAccent = localStorage.getItem('fleek-accent-v2');
-            if (savedAccent) root.style.setProperty('--accent-color', savedAccent);
+            if (!savedAccent || savedAccent === '#9f55ff') {
+                root.style.setProperty('--accent-color', '#e0e0e0');
+            } else {
+                root.style.setProperty('--accent-color', savedAccent);
+            }
 
-            // --- LOAD DATA ---
             const token = await getSpotifyToken();
             if (token) {
                 const [releases, tracks, artists] = await Promise.all([
@@ -903,22 +875,6 @@
                 renderList(releases, 'recommendations-scroll', 'album');
                 renderList(tracks, 'top-tracks-scroll', 'track');
                 renderList(artists, 'artists-scroll', 'artist');
-
-                searchInput.addEventListener('keypress', async (e) => {
-                    if (e.key === 'Enter' && searchInput.value.trim()) {
-                        document.getElementById('new-releases-section').style.display = 'none';
-                        document.getElementById('top-tracks-section').style.display = 'none';
-                        document.getElementById('top-artists-section').style.display = 'none';
-
-                        const resultsSection = document.getElementById('search-results-section');
-                        resultsSection.style.display = 'block';
-                        document.getElementById('search-results-title').innerText = `Buscando por "${searchInput.value}"...`;
-
-                        const results = await searchSpotify(searchInput.value, token);
-                        renderList(results, 'search-results-scroll', 'mixed');
-                        document.getElementById('search-results-title').innerText = `Resultados para "${searchInput.value}"`;
-                    }
-                });
             } else {
                 console.error("Token não gerado. Verifique conexão/chaves.");
             }
