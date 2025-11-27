@@ -1,26 +1,25 @@
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 import dns.resolver
 import os
 
-app = Flask(__name__)
+# --- Configuração ---
+app = Flask(__name__, template_folder='.', static_folder='.', static_url_path='')
 app.secret_key = "segredo_top"
 
-# Caminho fixo do banco dentro da pasta SistemaLogin
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "users.db")
 
-# --- Validação regex ---
+# --- Validações ---
 def email_valido(email):
     padrao = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     return re.match(padrao, email)
 
-# --- Verificar MX ---
 def dominio_tem_mx(email):
-    dominio = email.split('@')[-1]
     try:
+        dominio = email.split('@')[-1]
         dns.resolver.resolve(dominio, "MX")
         return True
     except Exception:
@@ -40,8 +39,14 @@ def init_db():
 
 init_db()
 
+# --- ROTAS ---
+
 @app.route("/")
 def login():
+    # --- MUDANÇA AQUI: ---
+    # Em vez de checar se está logado e redirecionar para home,
+    # nós limpamos a sessão. Assim, acessar "/" sempre desloga o usuário.
+    session.pop("user", None) 
     return render_template("login.html")
 
 @app.route("/login", methods=["POST"])
@@ -53,9 +58,10 @@ def login_user():
         flash("E-mail inválido!", "error")
         return redirect("/")
 
-    if not dominio_tem_mx(email):
-        flash("Domínio de e-mail não existe!", "error")
-        return redirect("/")
+    # Validação de MX comentada para agilidade nos testes
+    # if not dominio_tem_mx(email):
+    #     flash("Domínio de e-mail não existe!", "error")
+    #     return redirect("/")
 
     with sqlite3.connect(DB_PATH) as con:
         cur = con.cursor()
@@ -82,10 +88,6 @@ def register_user():
         flash("E-mail inválido!", "error")
         return redirect("/register")
 
-    if not dominio_tem_mx(email):
-        flash("Domínio de e-mail não existe!", "error")
-        return redirect("/register")
-
     password_hash = generate_password_hash(password)
 
     try:
@@ -104,7 +106,16 @@ def register_user():
 @app.route("/home")
 def home():
     if "user" in session:
-        return f"Bem-vindo(a), {session['user']}!"
+        # Certifique-se que o arquivo na sua pasta é index.html
+        return render_template("index.html") 
+    
+    # Se tentar acessar /home direto sem logar, joga pro login
     return redirect("/")
 
-app.run(debug=True)
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect("/")
+
+if __name__ == "__main__":
+    app.run(debug=True)

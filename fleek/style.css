@@ -1,179 +1,209 @@
-:root{
-  --bg: #0e0e0e;
-  --text: #ffffff;
-  --glass-bg: rgba(255,255,255,0.08);
-  --glass-border: rgba(255,255,255,0.12);
-  --topbar-h: 64px;
-  --gap: 1.2rem;
-  --radius: 14px;
-}
+        /* ======================= */
+        /*   FUNDO DA PÁGINA       */
+        /* ======================= */
+        body {
+            margin: 0;
+            background: url('/static/bg.jpg') no-repeat center/cover;
+            min-height: 100vh;
 
-/* RESET */
-*{margin:0; padding:0; box-sizing:border-box;}
-body{
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Poppins', sans-serif;
-}
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-/* HEADER FIXO */
-.topbar{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  height:var(--topbar-h);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 1rem;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  z-index:1000;
-}
+            font-family: "Inter", Arial, sans-serif;
 
-.logo{
-  display:flex;
-  align-items:center;
-  gap:.5rem;
-}
+            position: relative;
+            overflow: hidden;
+        }
 
-.logo img{
-  width:75px;
-}
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
 
-.menu{
-  display:flex;
-  gap:.5rem;
-}
+            /* 🔥 AGORA ESTÁ MAIS ESCURO igual ao exemplo */
+            background: rgba(0,0,0,0.70);
 
-/* BOTÕES DE ÍCONES */
-.icon-btn{
-  width:44px;
-  height:44px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:transparent;
-  border:none;
-  cursor:pointer;
-  border-radius:10px;
-  transition:0.2s;
-}
+            backdrop-filter: blur(10px); /* blur real */
+            z-index: 0;
+        }
 
-.icon-btn:hover{
-  background:rgba(255,255,255,0.06);
-  transform:translateY(-3px);
-}
+        /* ======================= */
+        /*  CARD CENTRAL LOGIN     */
+        /* ======================= */
+        .login-container {
+            position: relative;
+            z-index: 1;
 
-.icon-svg{
-  width:22px;
-  height:22px;
-}
+            width: 90%;          /* Responsivo */
+            max-width: 480px;    /* Tamanho definido */
+            padding: 45px 40px;
 
-/* BUTTONS LOGIN */
-.buttons{
-  display:flex;
-  gap:.6rem;
-}
+            /* Gradiente do modelo */
+            background: radial-gradient(
+                circle at top,
+                rgba(255, 255, 255, 0.10) 0%,
+                rgba(0, 0, 0, 0.60) 60%
+            );
 
-.glass-btn{
-  padding:.4rem .9rem;
-  border-radius:20px;
-  border:none;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  color: var(--text);
-  cursor:pointer;
-  transition:0.2s;
-}
+            backdrop-filter: blur(20px);
 
-.glass-btn:hover{
-  background:rgba(255,255,255,0.18);
-}
+            border-radius: 28px;
 
-/* CONTEÚDO */
-.content{
-  padding-top: calc(var(--topbar-h) + 1rem);
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  padding-bottom:2rem;
-}
+            /* sombra igual da imagem */
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.65);
 
-h2{
-  margin-bottom:.8rem;
-}
+            color: white;
+            animation: fadeInContainer 0.5s ease;
+        }
 
-/* SCROLL HORIZONTAL */
-.scroll{
-  display:flex;
-  gap:1rem;
-  overflow-x:auto;
-  scrollbar-width: thin;
-}
+        @keyframes fadeInContainer {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
-.scroll::-webkit-scrollbar{
-  height:6px;
-}
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 35px;
+            font-size: clamp(28px, 4vw, 40px);
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
 
-.scroll::-webkit-scrollbar-thumb{
-  background:rgba(255,255,255,0.12);
-  border-radius:10px;
-}
 
-/* CARDS */
-.card{
-  width:150px;
-  flex-shrink:0;
-  padding:.8rem;
-  border-radius:12px;
-  background:rgba(255,255,255,0.06);
-  backdrop-filter:blur(10px);
-  border:1px solid var(--glass-border);
-  text-align:center;
-}
+        .logo img {
+            width: 120px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(0,0,0,0.6));
+        }
 
-.card .img{
-  height:96px;
-  border-radius:10px;
-  background: linear-gradient(145deg,#333,#111);
-}
+        /* ======================= */
+        /*      BOTÕES SOCIAIS     */
+        /* ======================= */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 18px;
+            border: none;
+            margin: 12px 0;
+            font-size: 17px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
 
-/* CÍRCULOS */
-.circle{
-  width:90px;
-  height:90px;
-  border-radius:50%;
-  background: linear-gradient(145deg,#333,#111);
-  border:1px solid rgba(255,255,255,0.08);
-}
-/* ===== ÍCONES PEQUENOS (playlist, busca, perfil, tema) ===== */
+        .social {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
 
-.icon-btn .icon-svg {
-    stroke: #cfcfcf !important; /* cinza claro visível */
-    width: 26px;
-    height: 26px;
-    transition: stroke 0.2s ease-in-out, transform 0.2s;
-}
+            background: white;
+            color: black;
+            border: 1px solid #e5e5e5;
+        }
 
-.icon-btn:hover .icon-svg {
-    stroke: #ffffff !important; /* fica mais claro no hover */
-    transform: scale(1.15);
-}
-.card p {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin: 0.5rem 0 0.2rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .social img {
+            width: 26px;
+        }
 
-.card .artista {
-    font-size: 0.75rem;
-    opacity: 0.7;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .social:hover {
+            background: #f4f4f4;
+        }
+
+        /* ======================= */
+        /*        BOTÃO LOGIN      */
+        /* ======================= */
+        .primary {
+            background: linear-gradient(90deg, #a06bff, #7e3cff);
+            color: white;
+            font-weight: 600;
+        }
+
+        .primary:hover {
+            background: linear-gradient(90deg, #b984ff, #8f54ff);
+        }
+
+        /* ======================= */
+        /*      FORMULÁRIO         */
+        /* ======================= */
+        form {
+            margin-top: 25px;
+        }
+
+        label {
+            font-size: 15px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 6px 0 20px;
+            border-radius: 14px;
+
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input::placeholder {
+            color: #cccccc;
+        }
+
+        input:focus {
+            border-color: #b38bff;
+        }
+
+        /* ======================= */
+        /*       REGISTRAR         */
+        /* ======================= */
+        .register-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 15px;
+        }
+
+        .register-text a {
+            color: #c8a5ff;
+            text-decoration: none;
+        }
+
+        .register-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* ======================= */
+        /*   MENSAGENS DE ERRO     */
+        /* ======================= */
+        .error, .success {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .error {
+            background-color: #ffb8b8;
+            color: #4a0000;
+            border-left: 4px solid #c30000;
+        }
+
+        .success {
+            background-color: #b8ffc9;
+            color: #003f12;
+            border-left: 4px solid #009b2a;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
