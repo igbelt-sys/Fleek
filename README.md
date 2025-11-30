@@ -34,7 +34,7 @@ O projeto está em evolução constante, estes são os nossos próximos passos:
 
 * [ ] **Player de Música:** Implementar a reprodução funcional de áudio.
 * [ ] **Playlists:** Permitir que o usuário crie e salve suas músicas.
-* [ ] **ChatBot para FAQ:** Bot que responde perguntas do site web.
+* [ ] **ChatBot para FAQ:** Bot que responde perguntas com base no site.
 
 ---
 
